@@ -401,17 +401,17 @@ void sbu_expand_keys(sbu_key_t key, block_t *expanded_keys)
 	```
 	**/
 
-	expanded_keys[0] = (uint32_t)((key >> 32) & 0xFFFFFFFF);
-	expanded_keys[1] = (uint32_t)(key & 0xFFFFFFFF);
+	expanded_keys[0] = (uint32_t)(key & 0xFFFFFFFF);
+	expanded_keys[1] = (uint32_t)((key >> 32) & 0xFFFFFFFF);
 	
 	
 	for(int i = 2; i<32; i++){
-		uint32_t s = (expanded_keys[i-1] ^ expanded_keys[i-2]) % 32;
+		uint32_t s = (expanded_keys[i-1] ^ expanded_keys[i-2]) % 64;
 		expanded_keys[i] = table[s] ^ expanded_keys[i-1];
 	}
 
 	for(int i = 29; i>=0; i--){
-		uint32_t s = (expanded_keys[i+1] ^ expanded_keys[i+2]) % 32;
+		uint32_t s = (expanded_keys[i+1] ^ expanded_keys[i+2]) % 64;
 		expanded_keys[i] = table[s] ^ expanded_keys[i];
 	}
 
